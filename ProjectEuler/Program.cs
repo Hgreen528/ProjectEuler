@@ -1,4 +1,7 @@
-﻿using System;
+﻿//Author: Hunter Green
+//Created: 5/31/15
+//Problems 13-26 were done during Winter of 2014, Problems 1-12 have been redone and progress is continuing
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
@@ -10,7 +13,9 @@ namespace ProjectEuler
     {
         static void Main(string[] args)
         {
-            Console.Write("Enter the problem number: ");
+            Stopwatch sw = new Stopwatch();
+
+            Console.Write("Enter the Project Euler problem number: ");
             int problem = Int32.Parse(Console.ReadLine());
             switch(problem) {
                 case 1:
@@ -66,9 +71,14 @@ namespace ProjectEuler
                     break;
             }
 
+            Console.WriteLine("Time taken: " + sw.ElapsedMilliseconds + " milliseconds");
+            sw.Stop();
+
             Console.ReadLine();
         }
 
+
+        //Problem 1
         static void Problem1()
         {
             int sum = 0;
@@ -80,6 +90,19 @@ namespace ProjectEuler
             Console.WriteLine(sum);
         }
 
+        static bool isPalindrome(string s)
+        {
+            for (int i = 0; i < s.Length; i++)
+            {
+                if (s[i] != s[s.Length - 1 - i])
+                    return false;
+            }
+
+            return true;
+        }
+        //End of problem 1
+
+        //Problem 2
         static void Problem2()
         {
             long fibo1 = 1, fibo2 = 2, sum = 0;
@@ -93,12 +116,36 @@ namespace ProjectEuler
             Console.WriteLine(sum);
         }
 
+        static List<long> GetPrimeFactors(long n)
+        {
+            List<long> factors = new List<long>();
+
+            for (long i = 2; i < n / 2 + 1; i++)
+            {
+                if (n % i == 0)
+                {
+                    factors.Add(i);
+                    n /= i;
+                    i--;
+                }
+            }
+
+            factors.Add(n);
+
+            return factors;
+        }
+        //End of problem 2
+
+        //Problem 3
         static void Problem3()
         {
             List<long> factors = GetPrimeFactors(600851475143);
             Console.WriteLine(factors[factors.Count-1]);
         }
 
+        //End of problem 3
+
+        //Problem 4
         static void Problem4()
         {
             List<int> palindromeNumbers = new List<int>();
@@ -117,7 +164,9 @@ namespace ProjectEuler
             
             Console.WriteLine(palindromeNumbers.Max());
         }
+        //End of problem 4
 
+        //Problem 5
         static void Problem5()
         {
             List<int> primeFactors = new List<int>();
@@ -145,7 +194,9 @@ namespace ProjectEuler
 
             Console.WriteLine(product);
         }
+        //End of problem 5
 
+        //Problem 6
         static void Problem6()
         {
             long sumOfSquares = 0;
@@ -159,11 +210,44 @@ namespace ProjectEuler
             Console.WriteLine(squareOfSum - sumOfSquares);
         }
 
+        //End of problem 6
+
+        //Problem 7
         static void Problem7()
         {
             Console.WriteLine(GetNPrimes(10001)[10000]);
         }
 
+        static List<long> GetNPrimes(int n)
+        {
+            List<long> primes = new List<long>();
+
+            int numberToCheck = 2;
+            bool isPrime = true;
+            while (primes.Count < n)
+            {
+                isPrime = true;
+
+                foreach (long l in primes)
+                {
+                    if (numberToCheck % l == 0)
+                    {
+                        isPrime = false;
+                        break;
+                    }
+                }
+
+                if (isPrime)
+                    primes.Add(numberToCheck);
+
+                numberToCheck++;
+            }
+
+            return primes;
+        }
+        //End of Problem 7
+
+        //Problem 8
         static void Problem8()
         {
             String giantNumber = "7316717653133062491922511967442657474235534919493496983520312774506326239578318016984801869478851843858615607891129494954595017379583319528532088055111254069874715852386305071569329096329522744304355766896648950445244523161731856403098711121722383113622298934233803081353362766142828064444866452387493035890729629049156044077239071381051585930796086670172427121883998797908792274921901699720888093776657273330010533678812202354218097512545405947522435258490771167055601360483958644670632441572215539753697817977846174064955149290862569321978468622482839722413756570560574902614079729686524145351004748216637048440319989000889524345065854122758866688116427171479924442928230863465674813919123162824586178664583591245665294765456828489128831426076900422421902267105562632111110937054421750694165896040807198403850962455444362981230987879927244284909188845801561660979191338754992005240636899125607176060588611646710940507754100225698315520005593572972571636269561882670428252483600823257530420752963450";
@@ -207,7 +291,9 @@ namespace ProjectEuler
 
             Console.WriteLine(max);
         }
+        //End of problem 8
 
+        //Problem 9
         static void Problem9()
         {
             for(int a = 1; a < 333; a++)
@@ -224,7 +310,9 @@ namespace ProjectEuler
                 }
             }
         }
+        //End of problem 9
 
+        //Problem 10
         static void Problem10()
         {
             List<long> primes = GetPrimesUnder(2000000);
@@ -236,7 +324,37 @@ namespace ProjectEuler
             Console.WriteLine(sum);
         }
 
-        //A faster alternative would be to set up a sliding calculation for each row, column, and diagonal, resulting in 6n time instead of n^2 time
+        static List<long> GetPrimesUnder(long n)
+        {
+            List<long> primes = new List<long>();
+
+            bool[] isPrime = new bool[n];
+
+            for (int i = 2; i < n; i++)
+                isPrime[i] = true;
+
+            for (int number = 2; number < n / 2; number++)
+            {
+                if (isPrime[number])
+                {
+                    for (int multiple = number * 2; multiple < n; multiple += number)
+                    {
+                        isPrime[multiple] = false;
+                    }
+                }
+            }
+
+            for (int i = 0; i < n; i++)
+            {
+                if (isPrime[i])
+                    primes.Add(i);
+            }
+
+            return primes;
+        }
+        //End of problem 10
+
+        //Problem 11
         static void Problem11()
         {
             int[,] grid = new int[20, 20] { { 08, 02, 22, 97, 38, 15, 00, 40, 00, 75, 04, 05, 07, 78, 52, 12, 50, 77, 91, 08 }, 
@@ -263,6 +381,7 @@ namespace ProjectEuler
             int product = 0;
             int max = 0;
 
+            //A faster alternative would be to set up a sliding calculation for each row, column, and diagonal, resulting in 6n time instead of n^2 time
             for(int i = 0; i < 20; i++)
             {
                 for(int j = 0; j < 20; j++)
@@ -299,156 +418,556 @@ namespace ProjectEuler
 
             Console.WriteLine(max);
         }
+        //End of problem 11
 
-        
-        static void Problem12()
+        //Problem 12
+        static void problem12()
         {
-            int seriesIndex = 1;
-            long factorCount = 1;
+            int term = 7;
+            long triangleNumber = TriangleNumberAt(term);
+            long numFactors = DivisorCount(triangleNumber);
 
-            long[] subFactorCounts = new long[2];
-            subFactorCounts[0] = 1;
-            subFactorCounts[1] = 1;
-            
-            while (factorCount <= 500)
+            while (numFactors <= 500)
             {
-                //Since each triangle number can be written as n*(n+1)/2, where n is the index, the total number of factors is the factors of n plus the factors of n+1 minus 1
-
-                subFactorCounts[0] = subFactorCounts[1];
-                subFactorCounts[1] = GetDivisorCount(seriesIndex + 1);
-
-                factorCount = subFactorCounts[0] + subFactorCounts[1] - 1;
+                term++;
+                triangleNumber = TriangleNumberAt(term);
+                numFactors = DivisorCount(triangleNumber);
             }
 
-            Console.WriteLine(Sum1toN(seriesIndex));
+            Console.WriteLine(triangleNumber);
         }
 
-        static long GetDivisorCount(long n)
+        static long TriangleNumberAt(int n)
         {
-            //First generate a list of primes to test as potential divisors
-            List<long> primes = GetPrimesUnder(n + 1);
+            long sum = n * (n - 1) / 2;
+            return sum;
+        }
 
-            List<long> divisors = new List<long>();
-            List<long> divisorCounts = new List<long>();
-            
+        static long DivisorCount(long n)
+        {
+            long divisors = 0;
 
-            for(int primeIndex = 1; primeIndex < primes.Count; primeIndex++)
+            for (int i = 2; i <= Math.Sqrt(n); i++)
             {
-                if (n % primes[primeIndex] == 0)
-                {
-                    n /= primes[primeIndex];
-                    if (divisors[divisors.Count - 1] != primes[primeIndex])
-                    {
-                        divisors.Add(primes[primeIndex]);
-                        divisorCounts.Add(1);
-                    }
-                    else
-                        divisorCounts[divisorCounts.Count - 1]++;
+                if (n % i == 0)
+                    divisors++;
+            }
 
-                    primeIndex--;
+            return 2 * divisors;
+        }
+        //End of problem 12
+
+        //Problem 13
+        static void problem13()
+        {
+            BigInteger bi = new BigInteger();
+
+            string line;
+            StreamReader sr = new StreamReader("big number.txt");
+
+            while ((line = sr.ReadLine()) != null)
+            {
+                bi += BigInteger.Parse(line);
+            }
+
+            Console.WriteLine(bi.ToString());
+
+            sr.Close();
+        }
+        //End of problem 13
+
+        //Problem 14
+        static void problem14()
+        {
+            int startingNumber = 2;
+            int longestChainStart = startingNumber;
+            long length = CollatzLength(2, 1);
+            long longestLength = length;
+            while (startingNumber < 1000000)
+            {
+                startingNumber++;
+                length = CollatzLength(startingNumber, 1);
+                if (length > longestLength)
+                {
+                    longestLength = length;
+                    longestChainStart = startingNumber;
                 }
             }
 
-            long divisorCount = 1;
+            Console.WriteLine(longestChainStart);
+        }
 
-            foreach(long l in divisorCounts)
+        static long CollatzLength(long number, int length)
+        {
+            if (number == 1)
+                return ++length;
+            if (number % 2 == 0)
+                return CollatzLength(number / 2, ++length);
+            else
+                return CollatzLength(3 * number + 1, ++length);
+        }
+        //End of problem 14
+
+        //Problem 15
+        static void problem15()
+        {
+            long[,] map = new long[21, 21];
+
+            for (int i = 0; i < 20; i++)
             {
-                divisorCount *= (l + 1);
+                map[i, 20] = 1;
+                map[20, i] = 1;
             }
 
-            return divisorCount;
-        }
-
-        static long Sum1toN(long n)
-        {
-            return (n * (n + 1)) / 2;
-        }
-
-        static List<long> GetPrimesUnder(long n)
-        {
-            List<long> primes = new List<long>();
-
-            bool[] isPrime = new bool[n];
-
-            for (int i = 2; i < n; i++)
-                isPrime[i] = true;
-
-            for (int number = 2; number < n/2; number++)
+            for (int i = 19; i >= 0; i--)
             {
-                if(isPrime[number])
+                for (int j = 19; j >= 0; j--)
                 {
-                    for (int multiple = number * 2; multiple < n; multiple += number)
-                    {
-                        isPrime[multiple] = false;
-                    }
+                    map[i, j] = map[i + 1, j] + map[i, j + 1];
                 }
             }
 
-            for(int i = 0; i < n; i++)
+            Console.WriteLine(map[0, 0]);
+        }
+        //End of problem 15
+
+        //Problem 16
+        static void problem16()
+        {
+            BigInteger bi = new BigInteger();
+
+            bi = BigInteger.Pow(2, 1000);
+
+            long sum = 0;
+
+            while (bi > 0)
             {
-                if (isPrime[i])
-                    primes.Add(i);
+                int r = (int)(bi % 10);
+                sum += r;
+                bi /= 10;
             }
 
-            return primes;
+            Console.WriteLine(sum);
+        }
+        //End of problem 16
+
+        //Problem 17
+        static void problem17()
+        {
+            string one = "one";
+            string two = "two";
+            string three = "three";
+            string four = "four";
+            string five = "five";
+            string six = "six";
+            string seven = "seven";
+            string eight = "eight";
+            string nine = "nine";
+            string ten = "ten";
+            string eleven = "eleven";
+            string twelve = "twelve";
+            string thirteen = "thirteen";
+            string fourteen = "fourteen";
+            string fifteen = "fifteen";
+            string sixteen = "sixteen";
+            string seventeen = "seventeen";
+            string eighteen = "eighteen";
+            string nineteen = "nineteen";
+            string twenty = "twenty";
+            string thirty = "thirty";
+            string forty = "forty";
+            string fifty = "fifty";
+            string sixty = "sixty";
+            string seventy = "seventy";
+            string eighty = "eighty";
+            string ninety = "ninety";
+
+            int singles = one.Length + two.Length + three.Length + four.Length + five.Length
+                + six.Length + seven.Length + eight.Length + nine.Length;
+
+            int teens = ten.Length + eleven.Length + twelve.Length + thirteen.Length + fourteen.Length
+                + fifteen.Length + sixteen.Length + seventeen.Length + eighteen.Length + nineteen.Length;
+
+            int tens = 10 * (twenty.Length + thirty.Length + forty.Length + fifty.Length + sixty.Length + seventy.Length + eighty.Length + ninety.Length) + 8 * singles;
+
+            int hundreds = singles * 100 + 9 * 7 + 9 * 99 * 10 + 9 * (tens + teens + singles);
+
+            Console.WriteLine(11 + hundreds + tens + teens + singles);
+        }
+        //End of problem 17
+
+        //Problem 18
+        static void problem18()
+        {
+            int[,] tree = readTree("minimum path sum 1 tree.txt");
+
+            for (int i = tree.GetLength(0) - 2; i >= 0; i--)
+            {
+                for (int j = 0; j <= i; j++)
+                {
+                    tree[i, j] += max(tree[i + 1, j], tree[i + 1, j + 1]);
+                }
+            }
+
+            Console.WriteLine(tree[0, 0]);
         }
 
-        static List<long> GetNPrimes(int n)
+        static int max(int a, int b)
         {
-            List<long> primes = new List<long>();
+            if (a > b)
+                return a;
+            else
+                return b;
+        }
 
-            int numberToCheck = 2;
-            bool isPrime = true;
-            while(primes.Count < n)
+        static int[,] readTree(string filename)
+        {
+            string line;
+            string[] linePieces;
+            int lines = 0;
+
+            StreamReader r = new StreamReader(filename);
+            while ((line = r.ReadLine()) != null)
+                lines++;
+
+            int[,] tree = new int[lines, lines];
+
+            r.BaseStream.Seek(0, SeekOrigin.Begin);
+
+            int j = 0;
+            while ((line = r.ReadLine()) != null)
             {
-                isPrime = true;
-
-                foreach(long l in primes)
+                linePieces = line.Split(' ');
+                for (int i = 0; i < linePieces.Length; i++)
                 {
-                    if (numberToCheck % l == 0)
-                    {
-                        isPrime = false;
+                    tree[j, i] = int.Parse(linePieces[i]);
+                }
+                j++;
+            }
+            r.Close();
+            return tree;
+        }
+        //End of problem 18
+
+        static void problem19()
+        {
+            int totalDays = 0;
+            int numSundays = 0;
+
+            totalDays += 4 * 30; //September, April, June, November
+            totalDays += 7 * 31; //The rest except February
+            totalDays += 28;     //The first February
+            totalDays += 1; //Sets it up to the first of the next year
+
+            for (int i = 1901; i < 2001; i++)
+            {
+                if ((totalDays) % 7 == 0) //Check Jan 1st
+                    numSundays++;
+                totalDays += 31; //Add the days in Jan
+
+                if ((totalDays) % 7 == 0) //Check Feb 1st
+                    numSundays++;
+
+                //Add the days in Feb
+                if (i % 4 == 0 && (i % 100 != 0) || (i % 400 == 0))
+                {
+                    totalDays += 29;
+                }
+                else
+                    totalDays += 28;
+
+                if ((totalDays) % 7 == 0) //Check March 1st
+                    numSundays++;
+                totalDays += 31; //Add the days in March
+
+                if ((totalDays) % 7 == 0) //Check April 1st
+                    numSundays++;
+                totalDays += 30; //Add the days in April
+
+                if ((totalDays) % 7 == 0) //Check May 1st
+                    numSundays++;
+                totalDays += 31; //Add the days in May
+
+                if ((totalDays) % 7 == 0) //Check Jun 1st
+                    numSundays++;
+                totalDays += 30; //Add the days in Jun
+
+                if ((totalDays) % 7 == 0) //Check Jul 1st
+                    numSundays++;
+                totalDays += 31; //Add the days in Jul
+
+                if ((totalDays) % 7 == 0) //Check Aug 1st
+                    numSundays++;
+                totalDays += 31; //Add the days in Aug
+
+                if ((totalDays) % 7 == 0) //Check Sep 1st
+                    numSundays++;
+                totalDays += 30; //Add the days in Sep
+
+                if ((totalDays) % 7 == 0) //Check Oct 1st
+                    numSundays++;
+                totalDays += 31; //Add the days in Oct
+
+                if ((totalDays) % 7 == 0) //Check Nov 1st
+                    numSundays++;
+                totalDays += 30; //Add the days in Nov
+
+                if ((totalDays) % 7 == 0) //Check Dec 1st
+                    numSundays++;
+                totalDays += 31; //Add the days in Dec
+            }
+
+            Console.WriteLine(numSundays);
+        }
+        //End of problem 19
+
+        //Problem 20
+        static void problem20()
+        {
+            BigInteger bi = new BigInteger();
+            bi = 1;
+            for (int i = 100; i > 0; i--)
+                bi *= i;
+
+            long sum = 0;
+
+            while (bi > 0)
+            {
+                int r = (int)(bi % 10);
+                sum += r;
+                bi /= 10;
+            }
+
+            Console.WriteLine(sum);
+        }
+        //End of problem 20
+
+        //Problem 21
+        static void problem21()
+        {
+            int[,] map = new int[10000, 2];
+
+            for (int i = 0; i < 10000; i++)
+            {
+                map[i, 0] = i;
+                map[i, 1] = sumOfDivisors(i);
+            }
+
+            int[] amicableNumbers = new int[10000];
+            int index = 0;
+
+            for (int i = 0; i < 10000; i++)
+            {
+                for (int j = i; j < 10000; j++)
+                {
+                    if (map[i, 0] == 0)
                         break;
+                    if (map[j, 0] == 0)
+                        break;
+                    if (map[i, 1] == map[j, 0] && map[i, 0] == map[j, 1] && map[i, 0] != map[j, 0])
+                    {
+                        amicableNumbers[index++] = map[i, 0];
+                        map[i, 0] = 0;
+                        amicableNumbers[index++] = map[j, 0];
+                        map[j, 0] = 0;
                     }
                 }
-
-                if (isPrime)
-                    primes.Add(numberToCheck);
-
-                numberToCheck++;
             }
 
-            return primes;
+            long amicableSum = 0;
+
+            for (int i = 0; i < index; i++)
+            {
+                amicableSum += amicableNumbers[i];
+            }
+
+            Console.WriteLine(amicableSum);
         }
 
-        static List<long> GetPrimeFactors(long n)
+        static int sumOfDivisors(int n)
         {
-            List<long> factors = new List<long>();
+            int sod = 0;
 
-            for(long i = 2; i < n/2 + 1; i++)
+            for (int i = 1; i <= n / 2; i++)
+            {
+                if (n % i == 0)
+                    sod += i;
+            }
+
+            return sod;
+        }
+        //End of problem 21
+
+        //Problem 22
+        static void problem22()
+        {
+            string[] names;
+
+            string n = File.ReadAllText("names.txt");
+
+            n = n.Replace("\"", "");
+
+            names = n.Split(',');
+
+            Array.Sort(names);
+
+            BigInteger sum = new BigInteger();
+            sum = 0;
+
+            for (int i = 0; i < names.Length; i++)
+            {
+                int tempSum = 0;
+                for (int j = 0; j < names[i].Length; j++)
+                {
+                    tempSum += (int)(names[i][j] - '@');
+                }
+                sum += (i + 1) * tempSum;
+            }
+
+            Console.WriteLine(sum);
+        }
+        //End of problem 22
+
+        //Problem 23
+        static void problem23()
+        {
+            bool[] numList = new bool[20162];
+            long sum = 0;
+
+            List<int> abundantNumbers = new List<int>();
+
+            for (int i = 1; i < 20162; i++)
+            {
+                if (!numList[i])
+                    sum += i;
+
+                if (isAbundant(i))
+                {
+                    abundantNumbers.Add(i);
+                    for (int j = 0; j < abundantNumbers.Count; j++)
+                    {
+                        int abundantSum = i + abundantNumbers[j];
+                        if (abundantSum < 20162)
+                            numList[abundantSum] = true;
+                    }
+                }
+            }
+
+            Console.WriteLine(sum);
+        }
+
+        static bool isAbundant(int n)
+        {
+            int sum = 1;
+            for (int i = 2; i <= Math.Sqrt(n); i++)
             {
                 if (n % i == 0)
                 {
-                    factors.Add(i);
-                    n /= i;
-                    i--;
+                    sum += i;
+                    if (i != n / i)
+                    {
+                        sum += n / i;
+                    }
                 }
             }
 
-            factors.Add(n);
-
-            return factors;
+            return sum > n;
         }
+        //End of problem 23
 
-        static bool isPalindrome(string s)
+        //Problem 24
+        static void problem24()
         {
-            for(int i = 0; i < s.Length; i++)
+            int digits = 10;
+
+            string permutation = "";
+
+            long remainder = 1000000 - 1;
+
+            List<int> numbers = new List<int>();
+            for (int i = 0; i < digits; i++)
             {
-                if (s[i] != s[s.Length - 1 - i])
-                    return false;
+                numbers.Add(i);
             }
 
-            return true;
+            for (int i = 1; i < digits; i++)
+            {
+                long F = factorial(digits - i);
+                int j = (int)(remainder / F);
+                remainder %= F;
+                permutation = permutation + numbers[j];
+                numbers.RemoveAt(j);
+                if (remainder == 0)
+                    break;
+            }
+
+            for (int i = 0; i < numbers.Count; i++)
+            {
+                permutation = permutation + numbers[i];
+            }
+
+            Console.WriteLine(permutation);
         }
+
+        static long factorial(long n)
+        {
+            if (n <= 1)
+                return 1;
+            else
+                return n * factorial(n - 1);
+        }
+        //End of problem 24
+
+        //Problem 25
+        static void problem25()
+        {
+            List<BigInteger> fibo = new List<BigInteger>();
+
+            fibo.Add(1);
+            fibo.Add(1);
+
+            while (fibo[fibo.Count - 1].ToString().Length < 1000)
+            {
+                fibo.Add(fibo[fibo.Count - 1] + fibo[fibo.Count - 2]);
+            }
+
+            Console.WriteLine(fibo.Count);
+        }
+
+        //Problem 26
+        static void problem26()
+        {
+            int sequenceLength = 0;
+            int num = 0;
+
+            for (int i = 1000; i > 1; i--)
+            {
+                if (sequenceLength >= i)
+                {
+                    break;
+                }
+
+                int[] foundRemainders = new int[i];
+                int value = 1;
+                int position = 0;
+
+                while (foundRemainders[value] == 0 && value != 0)
+                {
+                    foundRemainders[value] = position;
+                    value *= 10;
+                    value %= i;
+                    position++;
+                }
+
+                if (position - foundRemainders[value] > sequenceLength)
+                {
+                    num = i;
+                    sequenceLength = position - foundRemainders[value];
+                }
+            }
+
+            Console.WriteLine(num);
+        }
+        //End of problem 26
     }
 }
